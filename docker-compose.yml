@@ -1,0 +1,30 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${SA_PASSWORD}
+
+    ports:
+      - "${SQL_PORT}:1433"
+
+    networks:
+      - jwt-network
+
+  jwt-api:
+    build: .
+    container_name: jwt-api
+
+    ports:
+      - "${JWT_PORT}:8080"
+
+    depends_on:
+      - sqlserver
+
+    networks:
+      - jwt-network
+
+networks:
+  jwt-network:
