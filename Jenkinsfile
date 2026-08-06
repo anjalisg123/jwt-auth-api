@@ -1,18 +1,22 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'mcr.microsoft.com/dotnet/sdk:8.0'
+        }
+    }
 
     stages {
-
-        stage('Clone') {
+        stage('Restore') {
             steps {
-                echo 'Repository already cloned by Jenkins.'
+                echo 'Restoring NuGet packages...'
+                sh 'dotnet restore'
             }
         }
 
-        stage('Show Files') {
+        stage('Build') {
             steps {
-                sh 'pwd'
-                sh 'ls'
+                echo 'Building .NET application...'
+                sh 'dotnet build --no-restore'
             }
         }
     }
